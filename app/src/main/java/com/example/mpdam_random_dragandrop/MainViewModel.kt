@@ -2,6 +2,7 @@ package com.example.mpdam_random_dragandrop
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import kotlin.random.Random
 
 class MainViewModel :ViewModel() {
 
@@ -16,11 +17,11 @@ class MainViewModel :ViewModel() {
 
     init {
         items = listOf(
-            NumberUi(1,"2",Color.Green),
-            NumberUi(2,"3",Color.Blue),
-            NumberUi(4,"1",Color.Red),
-            NumberUi(5,"3",Color.Magenta),
-            NumberUi(3,"1",Color.Cyan),
+            NumberUi(Random.nextInt(1, 101),"2",Color.Green),
+            NumberUi(Random.nextInt(1, 101),"3",Color.Blue),
+            NumberUi(Random.nextInt(1, 101),"1",Color.Red),
+            NumberUi(Random.nextInt(1, 101),"3",Color.Magenta),
+            NumberUi(Random.nextInt(1, 101),"1",Color.Cyan),
         )
     }
 
@@ -44,8 +45,15 @@ class MainViewModel :ViewModel() {
     }
 
     fun addPerson(personUiItem: NumberUi){
-
         addedPersons.add(personUiItem)
+        val itemToRemove = items.find { it.id == personUiItem.id }
+
+        // Create a new list without the identified item
+        val updatedItems = items.toMutableList()
+        itemToRemove?.let { updatedItems.remove(it) }
+
+        // Update the state with the new list
+        items = updatedItems
         if(addedPersons.size == 5) {
           items = emptyList()
             println(isNumbersInOrder(addedPersons))
